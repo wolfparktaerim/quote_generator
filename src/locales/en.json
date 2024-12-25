@@ -1,0 +1,19 @@
+{
+  "title": "Quote Generator",
+  "author": "WolfPTL",
+  "footer": {
+    "copyright": "© 2024 WolfPTL's Quote Generator. All rights reserved.",
+    "providedBy": "Inspirational quotes provided by ZenQuotes API."
+  },
+  "slogan": "Generate a Random Inspirational Quote with a Random Background for Free!",
+  "instructions": {
+    "1": "Step 1: Choose Your Settings and Press 'Generate'",
+    "2": "Step 2: View Your Quote Image Here (it may take some time to load...)",
+    "3": "Step 3: Press 'Download' to Get Your Image"
+  },
+  "orientation": "Orientation",
+  "landscape": "Lanscape",
+  "portrait": "Portrait",
+  "download": "Download",
+  "generate": "Generate"
+}
