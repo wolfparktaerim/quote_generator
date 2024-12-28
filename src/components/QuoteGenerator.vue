@@ -1,31 +1,31 @@
 <template>
     <div class="container mx-auto px-4 py-8 max-w-7xl">
-        <h1 class="text-3xl font-extrabold text-black mb-4">Generate a Random Inspirational Quote with a Random
-            Background for Free!
+        <h1 class="text-3xl font-extrabold text-black mb-4"> {{ $t('slogan') }}
         </h1>
 
         <!-- Large Screen Layout -->
         <div class="hidden lg:grid lg:grid-cols-[1fr_2fr] lg:grid-rows-[auto_1fr] gap-6">
             <!-- Section 1 -->
             <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
-                <h2 class="text-xl font-extrabold text-black mb-4">Step 1: Choose Your Settings and Press 'Generate'
+                <h2 class="text-xl font-extrabold text-black mb-4"> {{ $t('instructions.1') }}
                 </h2>
                 <!-- Drop-down for Picture Orientation -->
-                <label for="orientation" class="block text-gray-700 font-semibold mb-2">Orientation:</label>
+                <label for="orientation" class="block text-gray-700 font-semibold mb-2"> {{ $t('orientation')
+                    }}:</label>
                 <select id="orientation" v-model="selectedOrientation"
                     class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-100 focus:ring-2 focus:ring-blue-400 focus:outline-none mb-4">
-                    <option value="horizontal">Landscape</option>
-                    <option value="vertical">Portrait</option>
+                    <option value="horizontal"> {{ $t('landscape') }}</option>
+                    <option value="vertical"> {{ $t('portrait') }}</option>
                 </select>
                 <button @click="generateQuoteAndImage"
                     class="bg-blue-600 text-white px-6 py-3 rounded-xl w-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Generate
+                    {{ $t('generate') }}
                 </button>
             </div>
 
             <!-- Section 2 -->
             <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-center row-span-2 relative">
-                <h2 class="text-xl font-extrabold text-black mb-4">Step 2: View Your Quote Image</h2>
+                <h2 class="text-xl font-extrabold text-black mb-4"> {{ $t('instructions.2') }}</h2>
                 <div class="h-full flex items-center justify-center relative">
 
                     <div v-show="loading">
@@ -43,13 +43,13 @@
 
             <!-- Section 3 -->
             <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
-                <h2 class="text-xl font-extrabold text-black mb-4">Step 3: Press 'Download' to Get Your Image</h2>
+                <h2 class="text-xl font-extrabold text-black mb-4"> {{ $t('instructions.3') }}</h2>
                 <button @click="downloadImage" :disabled="!imageGenerated" :class="{
                     'bg-green-600 hover:bg-green-700': imageGenerated,
                     'bg-gray-400 cursor-not-allowed': !imageGenerated
                 }"
                     class="text-white px-6 py-3 rounded-xl w-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 mt-4">
-                    Download
+                    {{ $t('download') }}
                 </button>
             </div>
         </div>
@@ -58,22 +58,23 @@
         <div class="lg:hidden space-y-6">
             <!-- Section 1 -->
             <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-extrabold text-black mb-4">Step 1: Choose Your Settings</h2>
-                <label for="orientation-mobile" class="block text-gray-700 font-semibold mb-2">Orientation:</label>
+                <h2 class="text-3xl font-extrabold text-black mb-4"> {{ $t('instructions.1') }}</h2>
+                <label for="orientation-mobile" class="block text-gray-700 font-semibold mb-2"> {{ $t('orientation')
+                    }}:</label>
                 <select id="orientation-mobile" v-model="selectedOrientation"
                     class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-100 focus:ring-2 focus:ring-blue-400 focus:outline-none mb-4">
-                    <option value="horizontal">Landscape</option>
-                    <option value="vertical">Portrait</option>
+                    <option value="horizontal"> {{ $t('landscape') }}</option>
+                    <option value="vertical"> {{ $t('portrait') }}</option>
                 </select>
                 <button @click="generateQuoteAndImage"
                     class="bg-blue-600 text-white px-6 py-3 rounded-xl w-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    Generate
+                    {{ $t('generate') }}
                 </button>
             </div>
 
             <!-- Section 2 -->
             <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-extrabold text-black mb-4">Step 2: View Your Quote Image</h2>
+                <h2 class="text-3xl font-extrabold text-black mb-4"> {{ $t('instructions.2') }}</h2>
                 <div class="h-full flex items-center justify-center relative">
 
                     <div v-show="loading" class="loading-overlay">
@@ -91,13 +92,13 @@
 
             <!-- Section 3 -->
             <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-extrabold text-black mb-4">Step 3: Press 'Download' to Get Your Image</h2>
+                <h2 class="text-3xl font-extrabold text-black mb-4"> {{ $t('instructions.3') }}</h2>
                 <button @click="downloadImage" :disabled="!imageGenerated" :class="{
                     'bg-green-600 hover:bg-green-700': imageGenerated,
                     'bg-gray-400 cursor-not-allowed': !imageGenerated
                 }"
                     class="text-white px-6 py-3 rounded-xl w-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 mt-4">
-                    Download
+                    {{ $t('download') }}
                 </button>
 
             </div>
@@ -162,7 +163,7 @@ async function generateQuoteAndImage() {
 
         // disable for deployed website, enable for local host testing //
         // imageUrl = "https://static.vecteezy.com/system/resources/previews/040/890/255/non_2x/ai-generated-empty-wooden-table-on-the-natural-background-for-product-display-free-photo.jpg";
-        // imageUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
+        imageUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
 
         console.log("Image URL:", imageUrl);
 
