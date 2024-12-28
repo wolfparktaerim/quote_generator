@@ -1,11 +1,11 @@
 import './assets/main.css';
 
-import { createApp } from 'vue'
+import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
-import { createPinia } from 'pinia'
+import { createPinia } from 'pinia';
 
-import App from './App.vue'
-import router from './router'
+import App from './App.vue';
+import router from './router';
 
 import en from './locales/en.json';
 import zh from './locales/zh.json';
