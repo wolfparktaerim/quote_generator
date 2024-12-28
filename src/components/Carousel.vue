@@ -1,8 +1,7 @@
 <template>
-    <div class="relative w-full flex h-96">
-
-        <!-- Carousel section -->
-        <div class="w-2/3 relative overflow-hidden">
+    <div class="relative w-full flex flex-col md:flex-row h-auto md:h-96">
+        <!-- Carousel Section -->
+        <div class="w-full md:w-2/3 relative overflow-hidden h-60 md:h-full">
             <!-- Images -->
             <div class="flex h-full transition-transform duration-500 ease-out"
                 :style="{ transform: `translateX(-${currentIndex * 100}%)` }">
@@ -20,24 +19,16 @@
                 class="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/75">
                 →
             </button>
-
-            <!-- Dots -->
-            <!-- <div class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                <button v-for="(_, index) in images" :key="index" @click="currentIndex = index" :class="[
-                    'w-3 h-3 rounded-full transition-colors',
-                    currentIndex === index ? 'bg-white' : 'bg-white/50'
-                ]">
-                </button>
-            </div> -->
         </div>
-
 
         <!-- Fixed Box Section -->
         <div
-            class="fixed-box w-1/3 bg-gradient-to-r from-gray-900 to-black p-6 shadow-lg text-white font-serif h-full flex items-center justify-center">
+            class="w-full md:w-1/3 bg-gradient-to-r from-gray-900 to-black p-6 shadow-lg text-white font-serif flex items-center justify-center h-40 md:h-full">
             <div>
-                <h1 class="text-4xl font-extrabold">{{ $t('title') }}</h1>
-                <p class="text-sm mt-2 text-right">by <span class="text-yellow-400">{{ $t('author') }}</span></p>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-center md:text-left">{{ $t('title') }}</h1>
+                <p class="text-sm mt-2 text-center md:text-right">
+                    by <span class="text-yellow-400">{{ $t('author') }}</span>
+                </p>
             </div>
         </div>
     </div>
