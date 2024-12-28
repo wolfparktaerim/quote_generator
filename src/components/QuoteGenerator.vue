@@ -148,10 +148,10 @@ async function generateQuoteAndImage() {
         const wallhavenUrl = `https://wallhaven.cc/api/v1/search?apikey=${import.meta.env.VITE_img_api}&q=id%3A37&categories=100&sorting=random&ratios=${ratio}&purity=100&page=1&seed=${Math.random()}`;
         const imageResponse = await axios.get(
             // enable for deployed website, disable for local host testing // 
-            wallhavenUrl
+            // wallhavenUrl
 
             // disable for deployed website, enable for local host testing // 
-            // `https://api.allorigins.win/raw?url=${encodeURIComponent(wallhavenUrl)}`
+            `https://api.allorigins.win/raw?url=${encodeURIComponent(wallhavenUrl)}`
         )
         const imageData = imageResponse.data.data[0];
         if (!imageData || !imageData.path) {
