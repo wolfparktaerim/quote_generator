@@ -133,9 +133,10 @@ async function generateQuoteAndImage() {
         // Fetch quote
         const quoteResponse = await axios.get(
             // enable for deployed website, disable for local host testing //
-            // 'https://zenquotes.io/api/quotes'
+            'https://zenquotes.io/api/quotes'
+
             // disable for deployed website, enable for local host testing //  
-            'https://api.allorigins.win/raw?url=https://zenquotes.io/api/quotes'
+            // 'https://api.allorigins.win/raw?url=https://zenquotes.io/api/quotes'
         );
         let random = Math.ceil(Math.random() * 50);
         const quoteData = quoteResponse.data[random];
@@ -147,9 +148,10 @@ async function generateQuoteAndImage() {
         const wallhavenUrl = `https://wallhaven.cc/api/v1/search?apikey=${import.meta.env.VITE_img_api}&q=id%3A37&categories=100&sorting=random&ratios=${ratio}&purity=100&page=1&seed=${Math.random()}`;
         const imageResponse = await axios.get(
             // enable for deployed website, disable for local host testing // 
-            // `${encodeURIComponent(wallhavenUrl)}`
+            `${encodeURIComponent(wallhavenUrl)}`
+
             // disable for deployed website, enable for local host testing // 
-            `https://api.allorigins.win/raw?url=${encodeURIComponent(wallhavenUrl)}`
+            // `https://api.allorigins.win/raw?url=${encodeURIComponent(wallhavenUrl)}`
         )
         const imageData = imageResponse.data.data[0];
         if (!imageData || !imageData.path) {
@@ -157,9 +159,10 @@ async function generateQuoteAndImage() {
         }
 
         let imageUrl = imageData.path;
+
         // disable for deployed website, enable for local host testing //
         // imageUrl = "https://static.vecteezy.com/system/resources/previews/040/890/255/non_2x/ai-generated-empty-wooden-table-on-the-natural-background-for-product-display-free-photo.jpg";
-        imageUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
+        // imageUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
 
         console.log("Image URL:", imageUrl);
 
