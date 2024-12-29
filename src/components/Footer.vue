@@ -8,7 +8,7 @@
                 {{ $t('footer.providedBy') }}
                 <a href="https://wallhaven.cc/" target="_blank" class="text-indigo-400 hover:underline">
                     wallhaven API
-                </a>.
+                </a>
             </p>
         </div>
     </footer>

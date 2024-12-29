@@ -18,5 +18,9 @@
   "generate": "开始生成!",
   "useYourOwnQuote": "使用您自己的名言",
   "yourQuote": "您的名言",
-  "authorName": "作者名字"
+  "authorName": "作者名字",
+  "toast": {
+    "success": "您的图像已准备好下载！",
+    "fail": "抱歉，生成您的图像时出错！请重试或联系网站创建者。"
+  }
 }

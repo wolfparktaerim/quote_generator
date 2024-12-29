@@ -7,8 +7,12 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import router from './router';
 
+import Toast from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
+
 import en from './locales/en.json';
 import zh from './locales/zh.json';
+import { toast } from 'vue3-toastify';
 
 // Set up i18n
 const i18n = createI18n({
@@ -26,5 +30,6 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(i18n)
+app.use(Toast);
 
 app.mount('#app')

@@ -167,6 +167,12 @@ import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 import OpenAI from "openai";
+import { useToast } from 'vue-toastification';
+
+const { t } = useI18n();
+
+const toast = useToast();
+
 const openai = new OpenAI(
     {
         apiKey: import.meta.env.VITE_gpt_api,
@@ -203,7 +209,6 @@ async function generateQuoteAndImage() {
         ratio = "portrait";
     }
 
-
     try {
         // Check if user provided their own quote
         if (userOwnQuote.value) {
@@ -233,6 +238,8 @@ async function generateQuoteAndImage() {
             // StoicQuotes
             let quoteData = quoteResponse.data.data;
             console.log('Quote Object Data:', quoteData);
+
+            // Ensure the author is not empty
             if (quoteData.author == "") {
                 quoteData.author = "Anonymous";
             }
@@ -269,8 +276,10 @@ async function generateQuoteAndImage() {
 
         let imageUrl = imageData.path;
 
-        // disable for deployed website, enable for local host testing //
+        // a google image for quick testing 
         // imageUrl = "https://static.vecteezy.com/system/resources/previews/040/890/255/non_2x/ai-generated-empty-wooden-table-on-the-natural-background-for-product-display-free-photo.jpg";
+
+        // wallhaven image
         imageUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
 
         // console.log("Image URL:", imageUrl);
@@ -281,10 +290,12 @@ async function generateQuoteAndImage() {
         imageGenerated.value = true;
         // Finish loading
         loading.value = false;
+        toast.success(t('toast.success'));
 
     } catch (error) {
         console.error("Error generating quote or image:", error);
         loading.value = false;
+        toast.error(t('toast.fail'));
     }
 
     async function translateQuote(quote, author, language) {
@@ -297,7 +308,7 @@ async function generateQuoteAndImage() {
                         {
                             role: "user",
                             content: `
-                  Translate the following "${quote}&${author}' into ${language}, return one response only in the same format.
+                  Translate the following "${quote}&${author}' into ${language}, return one response only, straightly in the same format but do not include double quotation marks.
                   `,
                         },
                     ],
@@ -321,23 +332,20 @@ async function generateQuoteAndImage() {
 
     // paint the image on a canva
     async function createCompositeImage(imageUrl, quote, author, isMobile = false) {
-
         const canvas = isMobile ? canvasRefMobile.value : canvasRefLarge.value;
         const ctx = canvas.getContext('2d');
 
         // Create a new Image object
         const img = new Image();
-        img.crossOrigin = "anonymous"; // Enable cross-origin image loading
-        const maxWidth = 1280;  // Max width for resizing
-        const maxHeight = 720;  // Max height for resizing
+        img.crossOrigin = "anonymous";
+        const maxWidth = 1280;
+        const maxHeight = 720;
 
         // Wait for image to load
         await new Promise((resolve) => {
             img.onload = () => {
-                // Calculate aspect ratio
+                // Calculate aspect ratio and resize image
                 const aspectRatio = img.width / img.height;
-
-                // Set the new width and height based on the max width and height
                 let width = img.width;
                 let height = img.height;
 
@@ -350,58 +358,94 @@ async function generateQuoteAndImage() {
                     width = height * aspectRatio;
                 }
 
-
-                // Set canvas size to match resized image
+                // Set canvas size and draw image
                 canvas.width = width;
                 canvas.height = height;
-
-                // Draw the resized image on the canvas
                 ctx.drawImage(img, 0, 0, width, height);
 
-                // Add a semi-transparent overlay for better text readability
+                // Add overlay
                 ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                // Configure text style
+                // Text configuration
                 ctx.textAlign = 'center';
                 ctx.fillStyle = 'white';
 
-                // Draw the quote with word wrapping
-                const maxWidthText = canvas.width * 0.8; // 80% of canvas width
-                const words = quote.split(' ');
-                let lines = [];
-                let currentLine = '';
+                // Calculate font sizes based on canvas dimensions
+                const quoteFontSize = Math.min(canvas.height * 0.05, canvas.width * 0.04);
+                const authorFontSize = quoteFontSize * 0.6;
 
-                // Word wrap the quote
-                ctx.font = `bold ${canvas.height * 0.04}px Arial`;
-                words.forEach(word => {
-                    const testLine = currentLine + word + ' ';
-                    if (ctx.measureText(testLine).width > maxWidthText) {
-                        lines.push(currentLine);
-                        currentLine = word + ' ';
+                const isChinese = /[\u4e00-\u9fa5]/.test(quote);
+                const maxWidthText = canvas.width * 0.8;
+
+                // Set initial font for measurement
+                ctx.font = `bold ${quoteFontSize}px Arial`;
+
+                // Function to wrap text
+                function wrapText(text, maxWidth, isChinese) {
+                    let lines = [];
+                    if (isChinese) {
+                        let currentLine = '';
+                        for (let char of text) {
+                            const testLine = currentLine + char;
+                            const metrics = ctx.measureText(testLine);
+
+                            if (metrics.width > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = char;
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) {
+                            lines.push(currentLine);
+                        }
                     } else {
-                        currentLine = testLine;
+                        let words = text.split(' ');
+                        let currentLine = '';
+
+                        for (let word of words) {
+                            const testLine = currentLine ? `${currentLine} ${word}` : word;
+                            const metrics = ctx.measureText(testLine);
+
+                            if (metrics.width > maxWidth && currentLine) {
+                                lines.push(currentLine);
+                                currentLine = word;
+                            } else {
+                                currentLine = testLine;
+                            }
+                        }
+                        if (currentLine) {
+                            lines.push(currentLine);
+                        }
                     }
-                });
-                lines.push(currentLine);
+                    return lines;
+                }
 
-                // Draw the quote lines
-                const lineHeight = canvas.height * 0.05;
-                const startY = (canvas.height - (lines.length * lineHeight)) / 2;
+                // Wrap the quote text
+                const lines = wrapText(quote, maxWidthText, isChinese);
+
+                // Calculate vertical positioning
+                const lineHeight = quoteFontSize * 1.5;
+                const totalTextHeight = (lines.length * lineHeight) + (authorFontSize * 2);
+                let startY = (canvas.height - totalTextHeight) / 2;
+
+                // Draw quote lines
+                ctx.font = `bold ${quoteFontSize}px Arial`;
                 lines.forEach((line, i) => {
-                    ctx.fillText(line, canvas.width / 2, startY + (i * lineHeight));
+                    ctx.fillText(line.trim(), canvas.width / 2, startY + (i * lineHeight));
                 });
 
-                // Draw the author
-                ctx.font = `italic ${canvas.height * 0.03}px Arial`;
-                ctx.fillText(`― ${author}`, canvas.width * 0.55, startY + (lines.length * lineHeight) + lineHeight);
+                // Draw author
+                startY += lines.length * lineHeight + authorFontSize;
+                ctx.font = `italic ${authorFontSize}px Arial`;
+                ctx.fillText(`― ${author}`, canvas.width / 2, startY);
 
                 resolve();
             };
             img.src = imageUrl;
         });
     }
-
 }
 
 // Add the download image function here

@@ -8,7 +8,7 @@
   "slogan": "Generate a Random Inspirational Quote with a Random Background for Free!",
   "instructions": {
     "1": "Step 1: Choose Your Settings and Press 'Generate'",
-    "2": "Step 2: View Your Quote Image Here (it may take some time to load...)",
+    "2": "Step 2: View Your Quote Image Here (it may take a while...)",
     "3": "Step 3: Press 'Download' to Get Your Image"
   },
   "orientation": "Orientation",
@@ -18,5 +18,9 @@
   "generate": "Generate",
   "useYourOwnQuote": "Use your own quote",
   "yourQuote": "Your own quote",
-  "authorName": "Author name"
+  "authorName": "Author name",
+  "toast": {
+    "success": "Your image is ready for download!",
+    "fail": "Sorry. There is an error generating your image! Please try again or contact the website creator."
+  }
 }
