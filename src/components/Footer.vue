@@ -6,8 +6,8 @@
             </p>
             <p class="text-sm">
                 {{ $t('footer.providedBy') }}
-                <a href="https://zenquotes.io/" target="_blank" class="text-indigo-400 hover:underline">
-                    ZenQuotes API
+                <a href="https://wallhaven.cc/" target="_blank" class="text-indigo-400 hover:underline">
+                    wallhaven API
                 </a>.
             </p>
         </div>

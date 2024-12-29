@@ -3,7 +3,7 @@
   "author": "WolfPTL",
   "footer": {
     "copyright": "© 2024 WolfPTL's Quote Generator. All rights reserved.",
-    "providedBy": "Inspirational quotes provided by ZenQuotes API."
+    "providedBy": "Images provided by wallhaven API."
   },
   "slogan": "Generate a Random Inspirational Quote with a Random Background for Free!",
   "instructions": {
@@ -15,5 +15,8 @@
   "landscape": "Lanscape",
   "portrait": "Portrait",
   "download": "Download",
-  "generate": "Generate"
+  "generate": "Generate",
+  "useYourOwnQuote": "Use your own quote",
+  "yourQuote": "Your own quote",
+  "authorName": "Author name"
 }

@@ -17,8 +17,35 @@
                     <option value="horizontal"> {{ $t('landscape') }}</option>
                     <option value="vertical"> {{ $t('portrait') }}</option>
                 </select>
+
+                <!-- Checkbox for "Use Your Own Quote" -->
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" v-model="userOwnQuote"
+                            class="mr-2 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <span class="text-gray-700 font-semibold">{{ $t('useYourOwnQuote') }}</span>
+                    </label>
+                </div>
+
+                <!-- Additional Fields for User's Quote -->
+                <div v-if="userOwnQuote" class="space-y-4">
+                    <div>
+                        <label for="userQuote" class="block text-gray-700 font-semibold mb-2">{{ $t('yourQuote')
+                            }}</label>
+                        <input id="userQuote" v-model="userQuoteInput" type="text"
+                            class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full">
+                    </div>
+                    <div>
+                        <label for="authorName" class="block text-gray-700 font-semibold mb-2">{{ $t('authorName')
+                            }}</label>
+                        <input id="authorName" v-model="authorNameInput" type="text"
+                            class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full">
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
                 <button @click="generateQuoteAndImage"
-                    class="bg-blue-600 text-white px-6 py-3 rounded-xl w-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="bg-blue-600 text-white px-6 py-3 rounded-xl w-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4">
                     {{ $t('generate') }}
                 </button>
             </div>
@@ -59,6 +86,8 @@
             <!-- Section 1 -->
             <div class="bg-white p-6 rounded-xl shadow-lg">
                 <h2 class="text-3xl font-extrabold text-black mb-4"> {{ $t('instructions.1') }}</h2>
+
+                <!-- Drop-down for Picture Orientation -->
                 <label for="orientation-mobile" class="block text-gray-700 font-semibold mb-2"> {{ $t('orientation')
                     }}:</label>
                 <select id="orientation-mobile" v-model="selectedOrientation"
@@ -66,8 +95,35 @@
                     <option value="horizontal"> {{ $t('landscape') }}</option>
                     <option value="vertical"> {{ $t('portrait') }}</option>
                 </select>
+
+                <!-- Checkbox for "Use Your Own Quote" -->
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" v-model="userOwnQuote"
+                            class="mr-2 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                        <span class="text-gray-700 font-semibold">{{ $t('useYourOwnQuote') }}</span>
+                    </label>
+                </div>
+
+                <!-- Additional Fields for User's Quote -->
+                <div v-if="userOwnQuote" class="space-y-4">
+                    <div>
+                        <label for="userQuote-mobile" class="block text-gray-700 font-semibold mb-2">{{ $t('yourQuote')
+                            }}</label>
+                        <input id="userQuote-mobile" v-model="userQuoteInput" type="text"
+                            class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full">
+                    </div>
+                    <div>
+                        <label for="authorName-mobile" class="block text-gray-700 font-semibold mb-2">{{
+                            $t('authorName') }}</label>
+                        <input id="authorName-mobile" v-model="authorNameInput" type="text"
+                            class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full">
+                    </div>
+                </div>
+
+                <!-- Generate Button -->
                 <button @click="generateQuoteAndImage"
-                    class="bg-blue-600 text-white px-6 py-3 rounded-xl w-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    class="bg-blue-600 text-white px-6 py-3 rounded-xl w-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4">
                     {{ $t('generate') }}
                 </button>
             </div>
@@ -109,10 +165,26 @@
 <script setup>
 import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
+import { useI18n } from 'vue-i18n';
+import OpenAI from "openai";
+const openai = new OpenAI(
+    {
+        apiKey: import.meta.env.VITE_gpt_api,
+        dangerouslyAllowBrowser: true
+    }
+
+);
+
+const { locale } = useI18n(); // Access the current language
+const currentLanguage = locale; // reactive reference
 
 const selectedOrientation = ref('horizontal');
 const loading = ref(false);
 let ratio = "landscape";
+
+const userOwnQuote = ref(false); // Checkbox state
+const userQuoteInput = ref(''); // User's own quote input
+const authorNameInput = ref(''); // Author name input
 const quoteText = ref('');
 const quoteAuthor = ref('');
 const canvasRefLarge = ref(null);
@@ -131,36 +203,55 @@ async function generateQuoteAndImage() {
         ratio = "portrait";
     }
 
+
     try {
-        // Fetch quote
-        let quoteResponse = await axios.get(
-            // enable for deployed website, disable for local host testing //
-            // 'https://zenquotes.io/api/quotes'
+        // Check if user provided their own quote
+        if (userOwnQuote.value) {
+            quoteText.value = userQuoteInput.value || 'Default quote text';
+            quoteAuthor.value = authorNameInput.value || 'Anonymous';
+        }
+        else {
+            // Fetch quote using api
+            let quoteResponse = await axios.get(
+                // enable for deployed website, disable for local host testing //
+                // 'https://zenquotes.io/api/quotes'
 
-            // disable for deployed website, enable for local host testing //  
-            // 'https://api.allorigins.win/raw?url=https://zenquotes.io/api/quotes'
+                // disable for deployed website, enable for local host testing //  
+                // 'https://api.allorigins.win/raw?url=https://zenquotes.io/api/quotes'
 
-            // alt quote api
-            `https://api.allorigins.win/raw?url=https://stoic.tekloon.net/stoic-quote&_=${new Date().getTime()}`
+                // alt quote api
+                `https://api.allorigins.win/raw?url=https://stoic.tekloon.net/stoic-quote&_=${new Date().getTime()}`
 
-            // alt quote api
+                // alt quote api
 
+            );
+            // console.log(quoteResponse)
 
-        );
-        console.log(quoteResponse)
+            // let random = Math.ceil(Math.random() * 50);
+            // let quoteData = quoteResponse.data[random];
 
+            // StoicQuotes
+            let quoteData = quoteResponse.data.data;
+            console.log('Quote Object Data:', quoteData);
+            if (quoteData.author == "") {
+                quoteData.author = "Anonymous";
+            }
 
-        // let random = Math.ceil(Math.random() * 50);
-        // let quoteData = quoteResponse.data[random];
+            // console.log("current langauge is: ", currentLanguage);
 
-        // StoicQuotes
-        let quoteData = quoteResponse.data.data;
-        console.log('Quote Object Data:', quoteData);
-
-        quoteText.value = quoteData.quote;
-        quoteAuthor.value = quoteData.author;
-
-
+            // Translate the quote into the language selected by user
+            if (currentLanguage.value === 'zh') {
+                // console.log('zhong wen selected');
+                let translatedResult = await translateQuote(quoteData.quote, quoteData.author, 'Chinese');
+                console.log("Translated Result: ", translatedResult);
+                quoteText.value = translatedResult[0];
+                quoteAuthor.value = translatedResult[1];
+            }
+            else {// quotes are in English language
+                quoteText.value = quoteData.quote;
+                quoteAuthor.value = quoteData.author;
+            }
+        }
 
         // Fetch image
         const wallhavenUrl = `https://wallhaven.cc/api/v1/search?apikey=${import.meta.env.VITE_img_api}&q=id%3A37&categories=100&sorting=random&ratios=${ratio}&purity=100&page=1&seed=${Math.random()}`;
@@ -196,6 +287,39 @@ async function generateQuoteAndImage() {
         loading.value = false;
     }
 
+    async function translateQuote(quote, author, language) {
+        try {
+            const response = await axios.post(
+                "https://api.openai.com/v1/chat/completions",
+                {
+                    model: "gpt-4o-mini",
+                    messages: [
+                        {
+                            role: "user",
+                            content: `
+                  Translate the following "${quote}&${author}' into ${language}, return one response only in the same format.
+                  `,
+                        },
+                    ],
+                    temperature: 0.1,
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${import.meta.env.VITE_gpt_api}`,
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            let result = response.data.choices[0].message.content;
+            // console.log(result);
+            // console.log(result.split('&'));
+            return result.split('&');
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    // paint the image on a canva
     async function createCompositeImage(imageUrl, quote, author, isMobile = false) {
 
         const canvas = isMobile ? canvasRefMobile.value : canvasRefLarge.value;

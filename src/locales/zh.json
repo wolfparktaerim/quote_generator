@@ -2,12 +2,12 @@
   "title": "名言生成器",
   "author": "沃尔夫朴",
   "footer": {
-    "copyright": "© 2024 沃尔夫朴的名言生成器。保留所有权利.",
-    "providedBy": "由 ZenQuotes API 提供的励志名言."
+    "copyright": "© 2024 沃尔夫朴的名言生成器。保留所有权利。",
+    "providedBy": "由 wallhaven API 提供的图片背景。"
   },
-  "slogan": "免费生成带背景随机的励志名言！",
+  "slogan": "免费生成随机带有背景的励志名言!",
   "instructions": {
-    "1": "第一步: 选择图片设置并点击“开始生成！”",
+    "1": "第一步: 选择图片设置并点击“开始生成!”",
     "2": "第二步: 在此查看您的名言图片（加载可能需要一些时间…）",
     "3": "第三步: 点击“下载”以获取您的图片"
   },
@@ -15,5 +15,8 @@
   "landscape": "横向",
   "portrait": "纵向",
   "download": "下载",
-  "generate": "开始生成！"
+  "generate": "开始生成!",
+  "useYourOwnQuote": "使用您自己的名言",
+  "yourQuote": "您的名言",
+  "authorName": "作者名字"
 }
