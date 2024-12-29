@@ -1,5 +1,19 @@
 <template>
     <div class="relative w-full flex flex-col md:flex-row h-auto md:h-96">
+
+
+        <!-- Fixed Box Section -->
+        <div
+            class="w-full md:w-1/3 bg-gradient-to-r from-gray-900 to-black p-6 shadow-lg text-white font-serif flex items-center justify-center h-40 md:h-full">
+            <div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-center md:text-left">{{ $t('title') }}</h1>
+                <p class="text-sm mt-2 text-center md:text-right">
+                    by <span class="text-yellow-400">{{ $t('author') }}</span>
+                </p>
+            </div>
+        </div>
+
+
         <!-- Carousel Section -->
         <div class="w-full md:w-2/3 relative overflow-hidden h-60 md:h-full">
             <!-- Images -->
@@ -21,16 +35,7 @@
             </button>
         </div>
 
-        <!-- Fixed Box Section -->
-        <div
-            class="w-full md:w-1/3 bg-gradient-to-r from-gray-900 to-black p-6 shadow-lg text-white font-serif flex items-center justify-center h-40 md:h-full">
-            <div>
-                <h1 class="text-3xl md:text-4xl font-extrabold text-center md:text-left">{{ $t('title') }}</h1>
-                <p class="text-sm mt-2 text-center md:text-right">
-                    by <span class="text-yellow-400">{{ $t('author') }}</span>
-                </p>
-            </div>
-        </div>
+
     </div>
 </template>
 

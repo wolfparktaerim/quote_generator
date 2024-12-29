@@ -119,6 +119,7 @@ const canvasRefLarge = ref(null);
 const canvasRefMobile = ref(null);
 const imageGenerated = ref(false); // To track if the image is generated
 
+
 async function generateQuoteAndImage() {
 
     loading.value = true; // Start loading
@@ -132,18 +133,34 @@ async function generateQuoteAndImage() {
 
     try {
         // Fetch quote
-        const quoteResponse = await axios.get(
+        let quoteResponse = await axios.get(
             // enable for deployed website, disable for local host testing //
             // 'https://zenquotes.io/api/quotes'
 
             // disable for deployed website, enable for local host testing //  
-            'https://api.allorigins.win/raw?url=https://zenquotes.io/api/quotes'
+            // 'https://api.allorigins.win/raw?url=https://zenquotes.io/api/quotes'
+
+            // alt quote api
+            `https://api.allorigins.win/raw?url=https://stoic.tekloon.net/stoic-quote&_=${new Date().getTime()}`
+
+            // alt quote api
+
+
         );
-        let random = Math.ceil(Math.random() * 50);
-        const quoteData = quoteResponse.data[random];
+        console.log(quoteResponse)
+
+
+        // let random = Math.ceil(Math.random() * 50);
+        // let quoteData = quoteResponse.data[random];
+
+        // StoicQuotes
+        let quoteData = quoteResponse.data.data;
         console.log('Quote Object Data:', quoteData);
-        quoteText.value = quoteData.q;
-        quoteAuthor.value = quoteData.a;
+
+        quoteText.value = quoteData.quote;
+        quoteAuthor.value = quoteData.author;
+
+
 
         // Fetch image
         const wallhavenUrl = `https://wallhaven.cc/api/v1/search?apikey=${import.meta.env.VITE_img_api}&q=id%3A37&categories=100&sorting=random&ratios=${ratio}&purity=100&page=1&seed=${Math.random()}`;
@@ -165,7 +182,7 @@ async function generateQuoteAndImage() {
         // imageUrl = "https://static.vecteezy.com/system/resources/previews/040/890/255/non_2x/ai-generated-empty-wooden-table-on-the-natural-background-for-product-display-free-photo.jpg";
         imageUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
 
-        console.log("Image URL:", imageUrl);
+        // console.log("Image URL:", imageUrl);
 
         await createCompositeImage(imageUrl, quoteText.value, quoteAuthor.value, true);
         await createCompositeImage(imageUrl, quoteText.value, quoteAuthor.value, false);
