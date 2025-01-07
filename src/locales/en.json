@@ -2,7 +2,7 @@
   "title": "Quote Generator",
   "author": "WolfPTL",
   "footer": {
-    "copyright": "© 2024 WolfPTL's Quote Generator. All rights reserved.",
+    "copyright": "WolfPTL's Quote Generator. All rights reserved.",
     "providedBy": "Images provided by wallhaven API."
   },
   "slogan": "Generate a Random Inspirational Quote with a Random Background for Free!",
@@ -22,5 +22,10 @@
   "toast": {
     "success": "Your image is ready for download!",
     "fail": "Sorry. There is an error generating your image! Please try again or contact the website creator."
+  },
+  "socialIcon": {
+    "linkedin": "Visit Creator's Linkedin Profile",
+    "github": "Visit Creator's Github Profile",
+    "pw": "Visit Creator's Personal Website"
   }
 }

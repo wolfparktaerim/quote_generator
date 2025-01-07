@@ -86,15 +86,15 @@ const images = [
     },
     {
         "url": "/samples_en/quote_image (5).png",
-        "alt": "quote_image (5)"
+        "alt": "quote_image 5"
     },
     {
         "url": "/samples_en/quote_image (7).png",
-        "alt": "quote_image (7)"
+        "alt": "quote_image 7"
     },
     {
         "url": "/samples_en/quote_image (19).png",
-        "alt": "quote_image (19)"
+        "alt": "quote_image 19"
     },
     {
         "url": "/samples_en/quote_image (13).png",
@@ -103,6 +103,10 @@ const images = [
     {
         "url": "/samples_en/quote_image (16).png",
         "alt": "quote_image 16"
+    },
+    {
+        "url": "/samples_en/quote_image (8).png",
+        "alt": "quote_image 8"
     }
 ];
 const currentIndex = ref(0)
