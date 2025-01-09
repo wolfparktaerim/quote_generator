@@ -1,162 +1,198 @@
 <template>
-    <div class="container mx-auto px-4 py-8 max-w-7xl">
-        <h1 class="text-3xl font-extrabold text-black mb-4"> {{ $t('slogan') }}
-        </h1>
+    <div class="min-h-screen bg-slate-50 py-12">
+        <div class="container mx-auto px-6 max-w-7xl">
+            <!-- Header -->
+            <h1 class="text-4xl font-bold text-slate-800 mb-12 text-center">
+                {{ $t('slogan') }}
+            </h1>
 
-        <!-- Large Screen Layout -->
-        <div class="hidden lg:grid lg:grid-cols-[1fr_2fr] lg:grid-rows-[auto_1fr] gap-6">
-            <!-- Section 1 -->
-            <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
-                <h2 class="text-xl font-extrabold text-black mb-4"> {{ $t('instructions.1') }}
-                </h2>
-                <!-- Drop-down for Picture Orientation -->
-                <label for="orientation" class="block text-gray-700 font-semibold mb-2"> {{ $t('orientation')
-                    }}:</label>
-                <select id="orientation" v-model="selectedOrientation"
-                    class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-100 focus:ring-2 focus:ring-blue-400 focus:outline-none mb-4">
-                    <option value="horizontal"> {{ $t('landscape') }}</option>
-                    <option value="vertical"> {{ $t('portrait') }}</option>
-                </select>
+            <!-- Large Screen Layout -->
+            <div class="hidden lg:grid lg:grid-cols-[1fr_2fr] lg:grid-rows-[auto_1fr] gap-6">
 
-                <!-- Checkbox for "Use Your Own Quote" -->
-                <div class="mb-4">
-                    <label class="flex items-center">
-                        <input type="checkbox" v-model="userOwnQuote"
-                            class="mr-2 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="text-gray-700 font-semibold">{{ $t('useYourOwnQuote') }}</span>
-                    </label>
+                <!-- Section 1: Controls -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-8">
+                    <h2 class="text-xl font-bold text-slate-700 mb-8">
+                        {{ $t('instructions.1') }}
+                    </h2>
+
+                    <!-- Orientation Selection -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-slate-600 mb-2">
+                            {{ $t('orientation') }}
+                        </label>
+                        <select v-model="selectedOrientation"
+                            class="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 focus:ring-2 focus:ring-slate-400 focus:border-slate-400 focus:outline-none">
+                            <option value="horizontal">{{ $t('landscape') }}</option>
+                            <option value="vertical">{{ $t('portrait') }}</option>
+                        </select>
+                    </div>
+
+                    <!-- Quote Type Selection -->
+                    <div class="mb-8">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" v-model="userOwnQuote"
+                                class="w-5 h-5 rounded border-slate-300 text-slate-600 focus:ring-slate-400">
+                            <span class="ml-3 text-sm font-medium text-slate-600">
+                                {{ $t('useYourOwnQuote') }}
+                            </span>
+                        </label>
+                    </div>
+
+                    <!-- Custom Quote Inputs -->
+                    <div v-if="userOwnQuote" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-2">
+                                {{ $t('yourQuote') }}
+                            </label>
+                            <input v-model="userQuoteInput" type="text"
+                                class="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 focus:ring-2 focus:ring-slate-400 focus:border-slate-400 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-2">
+                                {{ $t('authorName') }}
+                            </label>
+                            <input v-model="authorNameInput" type="text"
+                                class="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 focus:ring-2 focus:ring-slate-400 focus:border-slate-400 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button @click="generateQuoteAndImage"
+                        class="w-full h-12 mt-8 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2">
+                        {{ $t('generate') }}
+                    </button>
                 </div>
 
-                <!-- Additional Fields for User's Quote -->
-                <div v-if="userOwnQuote" class="space-y-4">
-                    <div>
-                        <label for="userQuote" class="block text-gray-700 font-semibold mb-2">{{ $t('yourQuote')
-                            }}</label>
-                        <input id="userQuote" v-model="userQuoteInput" type="text"
-                            class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full">
-                    </div>
-                    <div>
-                        <label for="authorName" class="block text-gray-700 font-semibold mb-2">{{ $t('authorName')
-                            }}</label>
-                        <input id="authorName" v-model="authorNameInput" type="text"
-                            class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full">
-                    </div>
-                </div>
+                <!-- Section 2: Preview -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-8 row-span-2">
+                    <h2 class="text-xl font-bold text-slate-700 mb-8">
+                        {{ $t('instructions.2') }}
+                    </h2>
+                    <div class="relative h-[calc(100%-4rem)] flex items-center justify-center">
+                        <!-- Loading State -->
+                        <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-white/80">
+                            <div
+                                class="w-10 h-10 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin">
+                            </div>
+                        </div>
 
-                <!-- Generate Button -->
-                <button @click="generateQuoteAndImage"
-                    class="bg-blue-600 text-white px-6 py-3 rounded-xl w-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4">
-                    {{ $t('generate') }}
-                </button>
-            </div>
-
-            <!-- Section 2 -->
-            <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-center row-span-2 relative">
-                <h2 class="text-xl font-extrabold text-black mb-4"> {{ $t('instructions.2') }}</h2>
-                <div class="h-full flex items-center justify-center relative">
-
-                    <div v-show="loading">
-                        <div class="loader"></div>
-                    </div>
-
-                    <div v-show="!loading" class="content">
-                        <!-- Preview container -->
-                        <div class="preview-container">
-                            <canvas ref="canvasRefLarge" style="max-width: 100%; height: auto;"></canvas>
+                        <!-- Preview Content -->
+                        <div v-show="!loading" class="w-full h-full flex items-center justify-center">
+                            <div
+                                class="preview-container w-full h-full flex items-center justify-center bg-slate-50 rounded-lg">
+                                <canvas ref="canvasRefLarge"
+                                    style="max-width: 100%; max-height: 100%; object-fit: contain;"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Section 3: Download -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-8">
+                    <h2 class="text-xl font-bold text-slate-700 mb-8">
+                        {{ $t('instructions.3') }}
+                    </h2>
+                    <button @click="downloadImage" :disabled="!imageGenerated" :class="{
+                        'bg-green-600 hover:bg-green-700': imageGenerated,
+                        'bg-slate-200 cursor-not-allowed': !imageGenerated
+                    }"
+                        class="w-full h-12 text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2">
+                        {{ $t('download') }}
+                    </button>
+                </div>
             </div>
 
-            <!-- Section 3 -->
-            <div class="bg-white p-6 rounded-xl shadow-lg flex flex-col justify-between">
-                <h2 class="text-xl font-extrabold text-black mb-4"> {{ $t('instructions.3') }}</h2>
-                <button @click="downloadImage" :disabled="!imageGenerated" :class="{
-                    'bg-green-600 hover:bg-green-700': imageGenerated,
-                    'bg-gray-400 cursor-not-allowed': !imageGenerated
-                }"
-                    class="text-white px-6 py-3 rounded-xl w-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 mt-4">
-                    {{ $t('download') }}
-                </button>
-            </div>
-        </div>
+            <!-- Mobile Layout -->
+            <div class="lg:hidden space-y-6">
+                <!-- Mobile sections mirror the desktop styling -->
+                <!-- Section 1 -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6">
+                    <h2 class="text-xl font-bold text-slate-700 mb-8">
+                        {{ $t('instructions.1') }}
+                    </h2>
 
-        <!-- Mobile Screen Layout -->
-        <div class="lg:hidden space-y-6">
-            <!-- Section 1 -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-extrabold text-black mb-4"> {{ $t('instructions.1') }}</h2>
+                    <!-- Orientation Selection -->
+                    <div class="mb-8">
+                        <label class="block text-sm font-medium text-slate-600 mb-2">
+                            {{ $t('orientation') }}
+                        </label>
+                        <select v-model="selectedOrientation"
+                            class="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 focus:ring-2 focus:ring-slate-400 focus:border-slate-400 focus:outline-none">
+                            <option value="horizontal">{{ $t('landscape') }}</option>
+                            <option value="vertical">{{ $t('portrait') }}</option>
+                        </select>
+                    </div>
 
-                <!-- Drop-down for Picture Orientation -->
-                <label for="orientation-mobile" class="block text-gray-700 font-semibold mb-2"> {{ $t('orientation')
-                    }}:</label>
-                <select id="orientation-mobile" v-model="selectedOrientation"
-                    class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-100 focus:ring-2 focus:ring-blue-400 focus:outline-none mb-4">
-                    <option value="horizontal"> {{ $t('landscape') }}</option>
-                    <option value="vertical"> {{ $t('portrait') }}</option>
-                </select>
+                    <!-- Quote Type Selection -->
+                    <div class="mb-8">
+                        <label class="inline-flex items-center cursor-pointer">
+                            <input type="checkbox" v-model="userOwnQuote"
+                                class="w-5 h-5 rounded border-slate-300 text-slate-600 focus:ring-slate-400">
+                            <span class="ml-3 text-sm font-medium text-slate-600">
+                                {{ $t('useYourOwnQuote') }}
+                            </span>
+                        </label>
+                    </div>
 
-                <!-- Checkbox for "Use Your Own Quote" -->
-                <div class="mb-4">
-                    <label class="flex items-center">
-                        <input type="checkbox" v-model="userOwnQuote"
-                            class="mr-2 w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
-                        <span class="text-gray-700 font-semibold">{{ $t('useYourOwnQuote') }}</span>
-                    </label>
+                    <!-- Custom Quote Inputs -->
+                    <div v-if="userOwnQuote" class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-2">
+                                {{ $t('yourQuote') }}
+                            </label>
+                            <input v-model="userQuoteInput" type="text"
+                                class="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 focus:ring-2 focus:ring-slate-400 focus:border-slate-400 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-600 mb-2">
+                                {{ $t('authorName') }}
+                            </label>
+                            <input v-model="authorNameInput" type="text"
+                                class="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 focus:ring-2 focus:ring-slate-400 focus:border-slate-400 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <!-- Generate Button -->
+                    <button @click="generateQuoteAndImage"
+                        class="w-full h-12 mt-8 bg-slate-800 text-white rounded-lg hover:bg-slate-700 transition-colors focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2">
+                        {{ $t('generate') }}
+                    </button>
                 </div>
 
-                <!-- Additional Fields for User's Quote -->
-                <div v-if="userOwnQuote" class="space-y-4">
-                    <div>
-                        <label for="userQuote-mobile" class="block text-gray-700 font-semibold mb-2">{{ $t('yourQuote')
-                            }}</label>
-                        <input id="userQuote-mobile" v-model="userQuoteInput" type="text"
-                            class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full">
-                    </div>
-                    <div>
-                        <label for="authorName-mobile" class="block text-gray-700 font-semibold mb-2">{{
-                            $t('authorName') }}</label>
-                        <input id="authorName-mobile" v-model="authorNameInput" type="text"
-                            class="p-3 rounded-lg text-gray-700 border border-gray-300 bg-blue-50 focus:ring-2 focus:ring-blue-400 focus:outline-none w-full">
-                    </div>
-                </div>
-
-                <!-- Generate Button -->
-                <button @click="generateQuoteAndImage"
-                    class="bg-blue-600 text-white px-6 py-3 rounded-xl w-full hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 mt-4">
-                    {{ $t('generate') }}
-                </button>
-            </div>
-
-            <!-- Section 2 -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-extrabold text-black mb-4"> {{ $t('instructions.2') }}</h2>
-                <div class="h-full flex items-center justify-center relative">
-
-                    <div v-show="loading" class="loading-overlay">
-                        <div class="loader"></div>
-                    </div>
-
-                    <div v-show="!loading" class="content">
-                        <!-- Preview container -->
-                        <div class="preview-container">
-                            <canvas ref="canvasRefMobile" style="max-width: 100%; height: auto;"></canvas>
+                <!-- Section 2 -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6">
+                    <h2 class="text-xl font-bold text-slate-700 mb-6">
+                        {{ $t('instructions.2') }}
+                    </h2>
+                    <div class="relative h-64 flex items-center justify-center">
+                        <div v-if="loading" class="absolute inset-0 flex items-center justify-center bg-white/80">
+                            <div
+                                class="w-10 h-10 border-4 border-slate-200 border-t-slate-800 rounded-full animate-spin">
+                            </div>
+                        </div>
+                        <div v-show="!loading" class="w-full h-full flex items-center justify-center">
+                            <div
+                                class="preview-container w-full h-full flex items-center justify-center bg-slate-50 rounded-lg">
+                                <canvas ref="canvasRefMobile"
+                                    style="max-width: 100%; max-height: 100%; object-fit: contain;"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Section 3 -->
-            <div class="bg-white p-6 rounded-xl shadow-lg">
-                <h2 class="text-3xl font-extrabold text-black mb-4"> {{ $t('instructions.3') }}</h2>
-                <button @click="downloadImage" :disabled="!imageGenerated" :class="{
-                    'bg-green-600 hover:bg-green-700': imageGenerated,
-                    'bg-gray-400 cursor-not-allowed': !imageGenerated
-                }"
-                    class="text-white px-6 py-3 rounded-xl w-full transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 mt-4">
-                    {{ $t('download') }}
-                </button>
-
+                <!-- Section 3 -->
+                <div class="bg-white rounded-2xl border border-slate-200 p-6">
+                    <h2 class="text-xl font-bold text-slate-700 mb-6">
+                        {{ $t('instructions.3') }}
+                    </h2>
+                    <button @click="downloadImage" :disabled="!imageGenerated" :class="{
+                        'bg-green-600 hover:bg-green-700': imageGenerated,
+                        'bg-slate-200 cursor-not-allowed': !imageGenerated
+                    }"
+                        class="w-full h-12 text-white rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2">
+                        {{ $t('download') }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>

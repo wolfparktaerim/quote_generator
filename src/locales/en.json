@@ -5,7 +5,7 @@
     "copyright": "WolfPTL's Quote Generator. All rights reserved.",
     "providedBy": "Images provided by wallhaven API."
   },
-  "slogan": "Generate a Random Inspirational Quote with a Random Background for Free!",
+  "slogan": "Generate a Random Quote with a Random Background for Free!",
   "instructions": {
     "1": "Step 1: Choose Your Settings and Press 'Generate'",
     "2": "Step 2: View Your Quote Image Here (it may take a while...)",
@@ -27,5 +27,18 @@
     "linkedin": "Visit Creator's Linkedin Profile",
     "github": "Visit Creator's Github Profile",
     "pw": "Visit Creator's Personal Website"
+  },
+  "notFound": {
+    "h1": "Page Not Found",
+    "p": "The page you're looking for doesn't exist or has been moved.",
+    "goBack": "Go Back Home"
+  },
+  "features": {
+    "1": "Customizable Quotes",
+    "1-1": "Create and share your own meaningful quotes with our easy-to-use editor.",
+    "2": "Endless Scenic Possibilities",
+    "2-1": "Enjoy a vast range of images from tranquil to adventurous, with each new quote coming to life against a fresh, unique background.",
+    "3": "Easy Download",
+    "3-1": "Download your generated quotes instantly with just a click in high quality format."
   }
 }
