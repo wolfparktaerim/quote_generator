@@ -3,8 +3,8 @@
         <div class="container mx-auto text-center">
             <div class="flex justify-center space-x-6 mb-4">
                 <div class="group relative">
-                    <a href="https:www.linkedin.com/in/tailin-piao-9040bb287" target="_blank" rel="noopener noreferrer"
-                        class="block">
+                    <a href="https://www.linkedin.com/in/tailin-piao-9040bb287" target="_blank"
+                        rel="noopener noreferrer" class="block">
                         <svg xmlns="http://www.w3.org/2000/svg"
                             class="h-6 w-6 transition-colors duration-300 group-hover:text-blue-400" fill="currentColor"
                             viewBox="0 0 24 24">
