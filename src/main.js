@@ -14,6 +14,12 @@ import en from './locales/en.json';
 import zh from './locales/zh.json';
 import { toast } from 'vue3-toastify';
 
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js")
+    .then(() => console.log("Service Worker registered"))
+    .catch((err) => console.log("Service Worker failed", err));
+}
+
 // Set up i18n
 const i18n = createI18n({
     locale: 'en', // Default language
