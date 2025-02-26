@@ -2,10 +2,10 @@
   "name": "Quote Generator",
   "short_name": "QuoteGen",
   "description": "Get beautiful quote image with just a click!",
-  "start_url": "/index.html",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#007bff",
+  "background_color": "#111827",
+  "theme_color": "#111827",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
