@@ -193,16 +193,11 @@
 </template>
 
 <script setup>
-import 'isomorphic-fetch';
 import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 import OpenAI from "openai";
 import { useToast } from 'vue-toastification';
-import { createClient } from 'pexels';
-
-// use pexel api
-const client = createClient(import.meta.env.VITE_img_api2);
 
 const { t } = useI18n();
 
