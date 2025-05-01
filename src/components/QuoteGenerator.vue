@@ -193,6 +193,7 @@
 </template>
 
 <script setup>
+import 'isomorphic-fetch';
 import { ref, computed, onMounted, nextTick } from 'vue';
 import axios from 'axios';
 import { useI18n } from 'vue-i18n';
@@ -207,13 +208,11 @@ const { t } = useI18n();
 
 const toast = useToast();
 
-const openai = new OpenAI(
-  {
-    apiKey: import.meta.env.VITE_gpt_api,
-    dangerouslyAllowBrowser: true
-  }
-
-);
+const openai = new OpenAI({
+  apiKey: import.meta.env.VITE_gpt_api,
+  dangerouslyAllowBrowser: true,
+  fetch: window.fetch.bind(window) // Use browser's native fetch
+});
 
 const { locale } = useI18n(); // Access the current language
 const currentLanguage = locale; // reactive reference
