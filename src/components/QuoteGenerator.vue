@@ -198,6 +198,10 @@ import axios from 'axios';
 import { useI18n } from 'vue-i18n';
 import OpenAI from "openai";
 import { useToast } from 'vue-toastification';
+import { createClient } from 'pexels';
+
+// use pexel api
+const client = createClient(import.meta.env.VITE_img_api2);
 
 const { t } = useI18n();
 
@@ -255,19 +259,22 @@ async function generateQuoteAndImage() {
         // 'https://api.allorigins.win/raw?url=https://zenquotes.io/api/quotes'
 
         // alt quote api
-        `https://api.allorigins.win/raw?url=https://stoic.tekloon.net/stoic-quote&_=${new Date().getTime()}`
+        // `https://api.allorigins.win/raw?url=https://stoic.tekloon.net/stoic-quote&_=${new Date().getTime()}`
 
-        // alt quote api
-
+        // local quote api
+        `/quotes.json`
       );
-      // console.log(quoteResponse)
 
-      // let random = Math.ceil(Math.random() * 50);
-      // let quoteData = quoteResponse.data[random];
+      // StoicQuotes API data
+      // const quoteData = quoteResponse.data.data;
+      // console.log('Quote Object Data:', quoteData);
 
-      // StoicQuotes
-      const quoteData = quoteResponse.data.data;
-      console.log('Quote Object Data:', quoteData);
+      // Local Quotes Data
+      const quotes = quoteResponse.data;
+      console.log(quotes);
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      const quoteData = quotes[randomIndex];
+      console.log(quoteData);
 
       // Ensure the author is not empty
       if (quoteData.author == "") {
@@ -278,42 +285,81 @@ async function generateQuoteAndImage() {
 
       // Translate the quote into the language selected by user
       if (currentLanguage.value === 'zh') {
-        // console.log('zhong wen selected');
-        const translatedResult = await translateQuote(quoteData.quote, quoteData.author, 'Chinese');
-        console.log("Translated Result: ", translatedResult);
-        quoteText.value = translatedResult[0];
-        quoteAuthor.value = translatedResult[1];
+        // console.log('Chinese selected');
+
+        // Using chatgpt to translate
+        // const translatedResult = await translateQuote(quoteData.quote, quoteData.author, 'Chinese');
+        // console.log("Translated Result: ", translatedResult);
+        // quoteText.value = translatedResult[0];
+        // quoteAuthor.value = translatedResult[1];
+
+        // Using local data
+        if (quoteData.author_cn == "") { // in case the author name is missing
+          quoteData.author_cn = "无名氏";
+        }
+        else {
+          quoteText.value = quoteData.content_cn;
+          quoteAuthor.value = quoteData.author_cn;
+        }
+
       }
       else {// quotes are in English language
-        quoteText.value = quoteData.quote;
+
+        // StoicQuotes API
+        // quoteText.value = quoteData.quote;
+        // quoteAuthor.value = quoteData.author;
+
+        // Local quotes
+        quoteText.value = quoteData.content;
         quoteAuthor.value = quoteData.author;
       }
     }
 
     // Fetch image
+
+    // wallhaven api url
     const wallhavenUrl = `https://wallhaven.cc/api/v1/search?apikey=${import.meta.env.VITE_img_api}&q=id%3A37&categories=100&sorting=random&ratios=${ratio}&purity=100&page=1&seed=${Math.random()}`;
-    const imageResponse = await axios.get(
-      // enable for deployed website, disable for local host testing //
-      // wallhavenUrl
 
-      // disable for deployed website, enable for local host testing //
-      `https://api.allorigins.win/raw?url=${encodeURIComponent(wallhavenUrl)}`
-    )
-    const imageData = imageResponse.data.data[0];
-    if (!imageData || !imageData.path) {
-      throw new Error("No image data received.");
-    }
+    // wall haven image url
+    // const imageResponse = await axios.get(
+    //   // enable for deployed website, disable for local host testing //
+    //   // wallhavenUrl
 
-    let imageUrl = imageData.path;
+    //   // disable for deployed website, enable for local host testing //
+    //   // `https://api.allorigins.win/raw?url=${encodeURIComponent(wallhavenUrl)}`
+
+
+    // )
+    // const imageData = imageResponse.data.data[0];
+    // if (!imageData || !imageData.path) {
+    //   throw new Error("No image data received.");
+    // }
+    // let imageUrl = imageData.path;
 
     // a google image for quick testing
     // imageUrl = "https://static.vecteezy.com/system/resources/previews/040/890/255/non_2x/ai-generated-empty-wooden-table-on-the-natural-background-for-product-display-free-photo.jpg";
 
     // wallhaven image
-    imageUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
+    // imageUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(imageUrl)}`;
 
-    // console.log("Image URL:", imageUrl);
 
+    // pexel api url
+    const imageRes = await axios.get(`https://api.pexels.com/v1/search?query=scene&orientation=${ratio}&per_page=20&page=${Math.floor(Math.random() * 5) + 1}`, {
+      headers: {
+        Authorization: import.meta.env.VITE_img_api2
+      }
+    });
+    const imageData = imageRes.data;
+    console.log(imageData);
+    if (!imageData.photos || imageData.photos.length === 0) {
+      throw new Error('No images found');
+    }
+    const randomIndex = Math.floor(Math.random() * imageData.photos.length);
+    const imageUrl = imageData.photos[randomIndex].src.large;
+
+    console.log("Image URL:", imageUrl);
+
+    // Paint quote image
     await createCompositeImage(imageUrl, quoteText.value, quoteAuthor.value, true);
     await createCompositeImage(imageUrl, quoteText.value, quoteAuthor.value, false);
     // Mark Image generated
@@ -328,6 +374,7 @@ async function generateQuoteAndImage() {
     toast.error(t('toast.fail'));
   }
 
+  // Translate quote and author using ChatGPT API
   async function translateQuote(quote, author, language) {
     try {
       const response = await axios.post(
