@@ -265,7 +265,7 @@ async function generateQuoteAndImage() {
 
       // Local Quotes Data
       const quotes = quoteResponse.data;
-      console.log(quotes);
+      // console.log(quotes);
       const randomIndex = Math.floor(Math.random() * quotes.length);
       const quoteData = quotes[randomIndex];
       console.log(quoteData);
@@ -344,7 +344,7 @@ async function generateQuoteAndImage() {
       }
     });
     const imageData = imageRes.data;
-    console.log(imageData);
+    // console.log(imageData);
     if (!imageData.photos || imageData.photos.length === 0) {
       throw new Error('No images found');
     }
