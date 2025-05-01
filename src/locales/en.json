@@ -3,7 +3,8 @@
   "author": "WolfPTL",
   "footer": {
     "copyright": "WolfPTL's Quote Generator. All rights reserved.",
-    "providedBy": "Images provided by wallhaven API."
+    "providedBy": "Images provided by wallhaven API.",
+    "providedBy1": "Images provided by pexel API."
   },
   "slogan": "Generate a Random Quote with a Random Background for Free!",
   "instructions": {

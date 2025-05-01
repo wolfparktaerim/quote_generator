@@ -3,7 +3,8 @@
   "author": "沃尔夫朴",
   "footer": {
     "copyright": "沃尔夫朴的名言生成器。保留所有权利。",
-    "providedBy": "由 wallhaven API 提供的图片背景。"
+    "providedBy": "由 wallhaven API 提供的图片背景。",
+    "providedBy1": "由 pexel API 提供的图片背景。"
   },
   "slogan": "免费生成随机带有背景的励志名言!",
   "instructions": {

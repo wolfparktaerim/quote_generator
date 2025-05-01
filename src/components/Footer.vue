@@ -36,11 +36,18 @@
       <p class="text-sm mb-2">
         © {{ currentYear }} {{ $t('footer.copyright') }}
       </p>
-      <p class="text-sm">
+      <!-- <p class="text-sm">
         {{ $t('footer.providedBy') }}
         <a href="https://wallhaven.cc/" target="_blank" rel="noopener noreferrer"
           class="text-indigo-400 hover:underline">
           wallhaven API
+        </a>
+      </p> -->
+      <p class="text-sm">
+        {{ $t('footer.providedBy1') }}
+        <a href="https://www.pexels.com/" target="_blank" rel="noopener noreferrer"
+          class="text-indigo-400 hover:underline">
+          pexels API
         </a>
       </p>
     </div>
