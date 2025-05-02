@@ -85,11 +85,3 @@ yarn test:unit
 
 The application is fully responsive and provides an optimized experience on mobile devices.
 
-## 📞 Contact
-
-- GitHub: [WolfPTL](https://github.com/wolfparktaerim)
-- Email: [My Email](wolfparktaerim@gmail.com)
-
----
-
-Developed by WolfPTL
