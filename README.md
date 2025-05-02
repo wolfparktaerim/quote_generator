@@ -1,45 +1,95 @@
-# quote-generator
+# WolfPTL's Quote Generator
 
-This template should help get you started developing with Vue 3 in Vite.
+A beautiful web application that generates random quotes combined with stunning scenic backgrounds. Create inspirational visuals for social media, personal motivation, or simply to enjoy a moment of reflection.
 
-## Recommended IDE Setup
+![Quote Generator Preview](https://github.com/user-attachments/assets/4bcf3447-e71b-44fb-8e44-8734f709eb8a)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
 
-## Type Support for `.vue` Imports in TS
+## ✨ Features
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+- **Random Quote Generation**: Access a variety of inspirational and thoughtful quotes paired with beautiful backgrounds
+- **Customizable Quotes**: Edit existing quotes or create your own custom messages
+- **Beautiful Backgrounds**: High-quality scenic images from pexel API
+- **Multi-Language Support**: Currently supports English and Chinese quotes
+- **Easy Download**: Save your creations in high resolution with a single click
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
 
-## Customize configuration
+## 🚀 Live Demo
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+Try it out: [https://wolfptl-quote-generator.vercel.app/](https://wolfptl-quote-generator.vercel.app/)
 
-## Project Setup
+## 🛠️ Technologies Used
 
+- **Frontend Framework**: Vue.js 
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **Image API**: pexel
+- **Deployment**: Vercel
+
+## 📋 Prerequisites
+
+- Node.js
+- npm or yarn
+
+## ⚙️ Installation
+
+1. Clone the repository:
+```sh
+git clone https://github.com/wolfparktaerim/quote-generator.git
+cd quote-generator
+```
+
+2. Install dependencies:
 ```sh
 npm install
+# or
+yarn install
 ```
 
-### Compile and Hot-Reload for Development
+3. Create a `.env` file in the root directory and add your pexel API key (to run locally):
+```
+VITE_img_api2 = your_api_key_here
+```
 
+4. Start the development server:
 ```sh
 npm run dev
+# or
+yarn dev
 ```
 
-### Type-Check, Compile and Minify for Production
+5. Open your browser and visit:
+```
+http://localhost:5173
+```
+
+## 🏗️ Building for Production
 
 ```sh
 npm run build
+# or
+yarn build
 ```
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+The build artifacts will be stored in the `dist/` directory.
+
+## 🧪 Running Tests
 
 ```sh
 npm run test:unit
+# or
+yarn test:unit
 ```
 
-### Lint with [ESLint](https://eslint.org/)
+## 📱 Mobile View
 
-```sh
-npm run lint
-```
+The application is fully responsive and provides an optimized experience on mobile devices.
+
+## 📞 Contact
+
+- GitHub: [WolfPTL](https://github.com/wolfparktaerim)
+- Email: [My Email](wolfparktaerim@gmail.com)
+
+---
+
+Developed by WolfPTL
