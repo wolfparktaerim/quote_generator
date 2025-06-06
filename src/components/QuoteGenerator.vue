@@ -241,7 +241,7 @@ async function generateQuoteAndImage() {
     // Check if user provided their own quote
     if (userOwnQuote.value) {
       quoteText.value = userQuoteInput.value || 'Default quote text';
-      quoteAuthor.value = authorNameInput.value || 'Anonymous';
+      quoteAuthor.value = authorNameInput.value || "";
     }
     else {
       // Fetch quote using api
@@ -269,11 +269,6 @@ async function generateQuoteAndImage() {
       const randomIndex = Math.floor(Math.random() * quotes.length);
       const quoteData = quotes[randomIndex];
       console.log(quoteData);
-
-      // Ensure the author is not empty
-      if (quoteData.author == "") {
-        quoteData.author = "Anonymous";
-      }
 
       // console.log("current langauge is: ", currentLanguage);
 
@@ -510,7 +505,14 @@ async function generateQuoteAndImage() {
         // Draw author
         startY += lines.length * lineHeight + authorFontSize;
         ctx.font = `italic ${authorFontSize}px Arial`;
-        ctx.fillText(`― ${author}`, canvas.width / 2, startY);
+
+        // In case if author field is not filled
+        if (author == "") {
+          ctx.fillText(``, canvas.width / 2, startY);
+        }
+        else {
+          ctx.fillText(`― ${author}`, canvas.width / 2, startY);
+        }
 
         resolve();
       };
